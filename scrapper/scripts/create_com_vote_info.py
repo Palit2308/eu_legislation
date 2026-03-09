@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pandas as pd
-from functions.create_com_vote_info import get_committee_votes
+from functions.create_com_vote_info import get_committee_votes_with_html   # updated import
 
 # Determine the project root (parent of the 'scripts' folder)
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -41,13 +41,11 @@ def main():
         print(f"Processing {procedure} -> {hyperlink}")
         
         try:
-            df_committees = get_committee_votes(hyperlink)
-            # Add the procedure column
-            df_committees['procedure'] = procedure
+            # Use the new function that returns additional HTML columns
+            df_committees = get_committee_votes_with_html(hyperlink, procedure)
             all_dfs.append(df_committees)
         except Exception as e:
             print(f"Error processing {hyperlink}: {e}")
-            # Optionally add a row with error info? For now just skip.
             continue
     
     if not all_dfs:
@@ -57,7 +55,7 @@ def main():
     # Concatenate all results
     df_final = pd.concat(all_dfs, ignore_index=True)
     
-    # Reorder columns to put 'procedure' first (optional)
+    # Reorder columns to put 'procedure' first, then the rest
     cols = ['procedure'] + [c for c in df_final.columns if c != 'procedure']
     df_final = df_final[cols]
     
