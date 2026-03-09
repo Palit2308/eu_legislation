@@ -1,0 +1,37 @@
+# Ignore the build/output folder
+bld/
+**/bld/
+*/bld/
+
+# Ignore Windows desktop settings files
+desktop.ini
+Thumbs.db
+*.db
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# IDE settings
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*.swo
+
+# OS junk files
+.DS_Store
+*.log
+*.tmp
