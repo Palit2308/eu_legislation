@@ -20,7 +20,7 @@ project_root = os.path.dirname(script_dir)  # go up one level
 BLD = os.path.join(project_root, 'bld')
 
 # Path to the CSV with all procedure references and URLs
-LANDING_CSV = os.path.join(BLD, 'oeil_all_procedures_landing_page.csv')
+LANDING_CSV = os.path.join(BLD, 'oeil_cod_procedures.csv')
 
 # List of procedures to process (add as many as needed)
 procedures = [

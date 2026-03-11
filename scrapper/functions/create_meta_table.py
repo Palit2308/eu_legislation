@@ -1,5 +1,6 @@
 import re
-from bs4 import BeautifulSoup, NavigableString, Tag
+from bs4 import BeautifulSoup, NavigableString, Tag, Comment
+
 
 def parse_relationship_paragraph(p):
     """
@@ -27,28 +28,36 @@ def parse_relationship_paragraph(p):
         procedure = a.get_text(strip=True) if a else None
         link = a.get('href') if a else None
 
-        # Combine text parts to get the full string of the segment
-        seg_text = ''.join(str(c) for c in seg if isinstance(c, NavigableString)).strip()
+        # Combine text parts to get the full string of the segment, EXCLUDING comments
+        seg_text = ''.join(
+            str(c) for c in seg 
+            if isinstance(c, NavigableString) and not isinstance(c, Comment)
+        ).strip()
 
         # Determine action type and extract regulation number
         action = None
         regulation = None
 
         # Try to extract a regulation number: YYYY/XXXX or YYYY/XXXX/SUFFIX (e.g., 2003/87/EC)
-        reg_match = re.search(r'(\d{4}/\d+(?:/[A-Z]+)?)', seg_text)
+        reg_match = re.search(r'(\d+/\d+(?:/[A-Z]+)?)', seg_text)
         if reg_match:
             regulation = reg_match.group(1)
 
         # Determine action based on keywords
         if 'Repealing' in seg_text:
-            action = 'Repealing Regulation'
+            if reg_match:
+                # Get the text before the regulation number
+                before_reg = seg_text[:reg_match.start()].strip()
+                if before_reg:
+                    action = before_reg
+                else:
+                    action = 'Repealing'  # fallback
         elif 'Amended by' in seg_text:
             action = 'Amended by'
         elif 'Repealed by' in seg_text:
             action = 'Repealed by'
         elif 'Amending' in seg_text:
             # Could be "Amending Directive", "Amending Regulation", etc.
-            # Extract the part before the regulation number, if possible
             if reg_match:
                 # Get the text before the regulation number
                 before_reg = seg_text[:reg_match.start()].strip()
@@ -73,6 +82,79 @@ def parse_relationship_paragraph(p):
             'link': link
         })
     return results
+
+# def parse_relationship_paragraph(p):
+#     """
+#     Parse a paragraph containing legislative relationships (repeals, amendments).
+#     Returns a list of dictionaries, each with keys: action, regulation, procedure, link.
+#     Handles both 'Repealing Regulation 2010/995' and 'Amending Directive 2003/87/EC' styles.
+#     """
+#     segments = []
+#     current = []
+#     # Split by <br> tags
+#     for child in p.children:
+#         if child.name == 'br':
+#             if current:
+#                 segments.append(current)
+#                 current = []
+#         else:
+#             current.append(child)
+#     if current:
+#         segments.append(current)
+
+#     results = []
+#     for seg in segments:
+#         # Extract anchor if present
+#         a = next((c for c in seg if isinstance(c, Tag) and c.name == 'a'), None)
+#         procedure = a.get_text(strip=True) if a else None
+#         link = a.get('href') if a else None
+
+#         # Combine text parts to get the full string of the segment
+#         seg_text = ''.join(str(c) for c in seg if isinstance(c, NavigableString)).strip()
+
+#         # Determine action type and extract regulation number
+#         action = None
+#         regulation = None
+
+#         # Try to extract a regulation number: YYYY/XXXX or YYYY/XXXX/SUFFIX (e.g., 2003/87/EC)
+#         reg_match = re.search(r'(\d{4}/\d+(?:/[A-Z]+)?)', seg_text)
+#         if reg_match:
+#             regulation = reg_match.group(1)
+
+#         # Determine action based on keywords
+#         if 'Repealing' in seg_text:
+#             action = 'Repealing Regulation'
+#         elif 'Amended by' in seg_text:
+#             action = 'Amended by'
+#         elif 'Repealed by' in seg_text:
+#             action = 'Repealed by'
+#         elif 'Amending' in seg_text:
+#             # Could be "Amending Directive", "Amending Regulation", etc.
+#             # Extract the part before the regulation number, if possible
+#             if reg_match:
+#                 # Get the text before the regulation number
+#                 before_reg = seg_text[:reg_match.start()].strip()
+#                 if before_reg:
+#                     action = before_reg
+#                 else:
+#                     action = 'Amending'  # fallback
+#             else:
+#                 action = 'Amending'
+#         else:
+#             # If no keyword, use the whole text as action (fallback)
+#             action = seg_text
+
+#         # If we still have no action, set a default
+#         if not action:
+#             action = 'Unknown'
+
+#         results.append({
+#             'action': action,
+#             'regulation': regulation,
+#             'procedure': procedure,
+#             'link': link
+#         })
+#     return results
 
 def parse_subjects(p):
     """

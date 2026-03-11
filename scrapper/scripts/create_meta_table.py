@@ -33,7 +33,7 @@ def split_reference(ref):
         return None, ref
 
 # Path to your CSV file
-csv_path = f'{BLD}\\oeil_all_procedures_landing_page.csv'
+csv_path = f'{BLD}\\oeil_cod_procedures.csv'
 
 # Read the CSV once
 df_landing = pd.read_csv(csv_path)
@@ -124,11 +124,11 @@ for ref in procedures:
 if all_dfs:
     df_final = pd.concat(all_dfs, ignore_index=True)
     print("\nFinal DataFrame shape:", df_final.shape)
-    print(df_final.head(20))
+    print(df_final.head(30))
 else:
     df_final = pd.DataFrame(columns=['year', 'policy_number', 'procedure', 'meta_column', 'value'])
     print("No data extracted.")
 
 # Save to CSV and JSON
-df_final.to_csv(f'{BLD}\\test_procedures_meta.csv', index=False)
-df_final.to_json(f'{BLD}\\test_procedures_meta.json', orient='records', indent=2)
+df_final.to_csv(f'{BLD}\\beta_test_procedures_meta.csv', index=False)
+# df_final.to_json(f'{BLD}\\test_procedures_meta.json', orient='records', indent=2)
