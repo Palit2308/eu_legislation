@@ -1,14 +1,13 @@
 """
-Script to read the extracted-text CSV for 'other format' committee reports,
-expand the procedural information into a long-format table, and save the
-resulting CSV and JSON files.
+Script to build the long-format procedure table for 'other format'
+committee-report procedures from PDFs, and save it as CSV and JSON.
 """
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pandas as pd
-from functions.create_other_format_com_vote_procedure import expand_other_format_committee_procedure
+from functions.create_other_format_com_vote_procedure import build_other_format_com_vote_procedure_table
 
 # Determine the project root (parent of the 'scripts' folder)
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -17,22 +16,34 @@ BLD = os.path.join(project_root, 'bld')
 
 
 def main():
-    input_csv = os.path.join(BLD, 'beta_test_procedures_committee_other_format_text.csv')
+    vote_info_csv = os.path.join(BLD, 'committee_vote_info.csv')
+    timeline_csv = os.path.join(BLD, 'timeline_table.csv')
+    dict_csv = os.path.join(BLD, 'committee_dictionary.csv')
 
-    df = pd.read_csv(input_csv)
-    print(f"Read {len(df)} rows from {input_csv}")
+    df_vote_info = pd.read_csv(vote_info_csv)
+    print(f"Read {len(df_vote_info)} rows from {vote_info_csv}")
 
-    df_long = expand_other_format_committee_procedure(df)
-    print(f"Expanded to {len(df_long)} rows")
+    df_timeline = pd.read_csv(timeline_csv)
+    print(f"Read {len(df_timeline)} rows from {timeline_csv}")
 
-    output_csv = os.path.join(BLD, 'test_procedures_committee_other_format_procedure_table.csv')
-    df_long.to_csv(output_csv, index=False)
+    df_dict = pd.read_csv(dict_csv)
+    print(f"Read {len(df_dict)} rows from {dict_csv}")
+
+    df_out = build_other_format_com_vote_procedure_table(
+        df_vote_info=df_vote_info,
+        df_timeline=df_timeline,
+        df_dict=df_dict,
+    )
+    print(f"Built other-format procedure table with {len(df_out)} rows")
+
+    output_csv = os.path.join(BLD, 'committee_other_format_procedure_table.csv')
+    df_out.to_csv(output_csv, index=False)
     print(f"Saved CSV to {output_csv}")
 
-    output_json = os.path.join(BLD, 'test_procedures_committee_other_format_procedure_table.json')
-    df_long.to_json(output_json, orient='records', indent=2, force_ascii=False)
+    output_json = os.path.join(BLD, 'committee_other_format_procedure_table.json')
+    df_out.to_json(output_json, orient='records', indent=2, force_ascii=False)
     print(f"Saved JSON to {output_json}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -255,16 +255,43 @@ TASKS: Dict[str, Task] = {
         description="Expand committee roll call tables",
     ),
 
-    "com_other_format_text": Task(
-        name="com_other_format_text",
-        cmd=[sys.executable, "scripts/create_com_other_format_text.py"],
+    # "com_other_format_text": Task(
+    #     name="com_other_format_text",
+    #     cmd=[sys.executable, "scripts/create_com_other_format_text.py"],
+    #     file_deps=[
+    #         "scripts/create_com_other_format_text.py",
+    #         "scripts/create_com_vote_info.py",
+    #         "scripts/create_timeline_table.py",
+    #         "scripts/scrape_cod_procedures.py",
+    #         "functions/scrape_cod_procedures.py",
+    #         "functions/create_other_format_text.py",
+    #         "functions/create_timeline_table.py",
+    #         "functions/create_com_vote_info.py",
+    #         "bld/oeil_cod_procedures.csv",
+    #         "bld/timeline_table.csv",
+    #         "bld/timeline_table.json",
+    #         "bld/committee_vote_info.csv",
+    #         "bld/committee_vote_info.json",
+    #     ],
+    #     outputs=[
+    #         "bld/committee_other_format_text.csv",
+    #     ],
+    #     task_deps=["scrape_cod_procedures", "timeline_table", "com_vote_info"],
+    #     description="Extract text from fallback PDFs / other formats",
+    # ),
+
+    "other_format_com_vote_procedure": Task(
+        name="other_format_com_vote_procedure",
+        cmd=[sys.executable, "scripts/create_other_format_com_vote_procedure.py"],
         file_deps=[
-            "scripts/create_com_other_format_text.py",
+            "scripts/create_other_format_com_vote_procedure.py",
             "scripts/create_com_vote_info.py",
             "scripts/create_timeline_table.py",
             "scripts/scrape_cod_procedures.py",
+            'scripts/create_committee_dictionary.py',
+            'functions/create_committee_dictionary.py',
             "functions/scrape_cod_procedures.py",
-            "functions/create_other_format_text.py",
+            "functions/create_other_format_com_vote_procedure.py",
             "functions/create_timeline_table.py",
             "functions/create_com_vote_info.py",
             "bld/oeil_cod_procedures.csv",
@@ -272,29 +299,16 @@ TASKS: Dict[str, Task] = {
             "bld/timeline_table.json",
             "bld/committee_vote_info.csv",
             "bld/committee_vote_info.json",
+            "bld/committee_dictionary.csv",
+            "bld/committee_dictionary.json",
         ],
         outputs=[
-            "bld/committee_other_format_text.csv",
+            "bld/committee_other_format_procedure_table.csv",
+            "bld/committee_other_format_procedure_table.json",
         ],
-        task_deps=["scrape_cod_procedures", "timeline_table", "com_vote_info"],
-        description="Extract text from fallback PDFs / other formats",
+        task_deps=["scrape_cod_procedures", "timeline_table", "com_vote_info", "committee_dictionary"],
+        description="Parse procedural sections from other-format texts",
     ),
-
-    # "other_format_com_vote_procedure": Task(
-    #     name="other_format_com_vote_procedure",
-    #     cmd=[sys.executable, "scripts/create_other_format_com_vote_procedure.py"],
-    #     file_deps=[
-    #         "scripts/create_other_format_com_vote_procedure.py",
-    #         "functions/create_other_format_com_procedure_table.py",
-    #         "bld/beta_test_procedures_committee_other_format_text.csv",
-    #     ],
-    #     outputs=[
-    #         "bld/create_other_formats_com_vote_procedure.csv",
-    #         "bld/create_other_formats_com_vote_procedure.json",
-    #     ],
-    #     task_deps=["com_other_format_text"],
-    #     description="Parse procedural sections from other-format texts",
-    # ),
 }
 # -----------------------------------------------------------------------------
 # end editable section
@@ -446,7 +460,7 @@ def main() -> int:
     args = parser.parse_args()
 
     BLD.mkdir(parents=True, exist_ok=True)
-    
+
     order = topo_sort(TASKS)
 
     if args.list:
