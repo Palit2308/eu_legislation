@@ -102,8 +102,8 @@ if all_timelines:
     print(f"\nFinal combined timeline: {len(df_combined)} rows.")
 
     # Save to CSV and JSON
-    df_combined.to_csv(os.path.join(BLD, 'test_procedures_timeline.csv'), index=False)
-    df_combined.to_json(os.path.join(BLD, 'test_procedures_timeline.json'), orient='records', indent=2)
-    print("Saved timeline.csv and timeline.json")
+    df_combined.to_csv(os.path.join(BLD, 'timeline_table.csv'), index=False)
+    df_combined.to_json(os.path.join(BLD, 'timeline_table.json'), orient='records', indent=2)
+    print("Saved timeline_table.csv and timeline_table.json")
 else:
     print("No data extracted for any procedure.")

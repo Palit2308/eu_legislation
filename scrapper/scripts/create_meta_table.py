@@ -32,8 +32,8 @@ def split_reference(ref):
     else:
         return None, ref
 
-# Path to your CSV file
-csv_path = f'{BLD}\\oeil_cod_procedures.csv'
+# Input file
+csv_path = os.path.join(BLD, "oeil_cod_procedures.csv")
 
 # Read the CSV once
 df_landing = pd.read_csv(csv_path)
@@ -130,5 +130,10 @@ else:
     print("No data extracted.")
 
 # Save to CSV and JSON
-df_final.to_csv(f'{BLD}\\beta_test_procedures_meta.csv', index=False)
-# df_final.to_json(f'{BLD}\\test_procedures_meta.json', orient='records', indent=2)
+output_csv = os.path.join(BLD, "meta_table.csv")
+df_final.to_csv(output_csv, index=False)
+print(f"Saved CSV to {output_csv}")
+
+output_json = os.path.join(BLD, "meta_table.json")
+df_final.to_json(output_json, orient="records", indent=2)
+print(f"Saved JSON to {output_json}")

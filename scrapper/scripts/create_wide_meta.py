@@ -5,13 +5,12 @@ import os
 # ------------------------------
 # Configuration
 # ------------------------------
-# Determine the project root (parent of the 'scripts' folder)
 script_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(script_dir)  # go up one level
+project_root = os.path.dirname(script_dir)
 BLD = os.path.join(project_root, 'bld')
 
-input_file = os.path.join(BLD, 'test_procedures_meta.csv')
-output_file = os.path.join(BLD, 'test_procedures_meta_wide.csv')
+input_file = os.path.join(BLD, 'meta_table.csv')
+output_file = os.path.join(BLD, 'wide_meta.csv')
 
 # ------------------------------
 # Read long format

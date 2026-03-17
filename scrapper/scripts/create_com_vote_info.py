@@ -12,7 +12,7 @@ BLD = os.path.join(project_root, 'bld')
 
 def main():
     # Path to the input CSV
-    input_csv = os.path.join(BLD, 'test_procedures_timeline.csv')
+    input_csv = os.path.join(BLD, 'timeline_table.csv')
     
     # Read the timeline data
     df_timeline = pd.read_csv(input_csv)
@@ -60,9 +60,14 @@ def main():
     df_final = df_final[cols]
     
     # Save output
-    output_csv = os.path.join(BLD, 'test_procedures_committee_vote_info.csv')
+    output_csv = os.path.join(BLD, 'committee_vote_info.csv')
     df_final.to_csv(output_csv, index=False)
     print(f"Saved {len(df_final)} rows to {output_csv}")
+
+    # Save as JSON (records format – list of objects)
+    output_json = os.path.join(BLD, 'committee_vote_info.json')
+    df_final.to_json(output_json, orient='records', indent=2)
+    print(f"Saved JSON to {output_json}")
 
 if __name__ == "__main__":
     main()

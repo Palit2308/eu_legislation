@@ -2,6 +2,7 @@
 bld/
 **/bld/
 */bld/
+scrapper/.pipeline_state.json
 
 # Ignore Windows desktop settings files
 desktop.ini

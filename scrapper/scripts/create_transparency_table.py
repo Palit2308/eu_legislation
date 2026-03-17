@@ -153,10 +153,9 @@ if all_meetings:
 
     print(f"\nTotal combined transparency meetings: {len(df_transparency)}")
 
-    # Save to CSV and JSON using dynamic BLD path
-    output_base = os.path.join(BLD, 'test_procedures_transparency')
-    df_transparency.to_csv(f"{output_base}.csv", index=False)
-    df_transparency.to_json(f"{output_base}.json", orient='records', indent=2)
-    print(f"Saved to {output_base}.csv and {output_base}.json")
+    # Save to CSV and JSON using pipeline-consistent names
+    df_transparency.to_csv(os.path.join(BLD, 'transparency_table.csv'), index=False)
+    df_transparency.to_json(os.path.join(BLD, 'transparency_table.json'), orient='records', indent=2)
+    print("Saved to transparency_table.csv and transparency_table.json")
 else:
     print("No data extracted for any procedure.")
