@@ -10,7 +10,8 @@ project_root = os.path.dirname(script_dir)
 BLD = os.path.join(project_root, 'bld')
 
 input_file = os.path.join(BLD, 'meta_table.csv')
-output_file = os.path.join(BLD, 'wide_meta.csv')
+output_file1 = os.path.join(BLD, 'wide_meta.csv')
+output_file2 = os.path.join(BLD, 'meta_council_info.csv')
 
 # ------------------------------
 # Read long format
@@ -53,6 +54,33 @@ wide.columns.name = None
 # ------------------------------
 # Save
 # ------------------------------
-wide.to_csv(output_file, index=False)
-print(f"Wide table saved to: {output_file}")
+wide.to_csv(output_file1, index=False)
+print(f"Wide table saved to: {output_file1}")
 print(f"Shape: {wide.shape}")
+
+# ------------------------------
+# Council description in meta 
+# ------------------------------
+
+# identify all council-related columns
+council_cols = [col for col in wide.columns if col.startswith("Council")]
+
+# create boolean flag
+council_info_flag = wide[council_cols].notna().any(axis=1)
+
+# explicitly take only the first 'procedure' column
+procedure_col = wide.loc[:, wide.columns == "procedure"].iloc[:, 0]
+
+# build council table without changing wide
+df_council_info = pd.concat(
+    [
+        procedure_col.rename("procedure"),
+        council_info_flag.rename("council_info"),
+        wide[council_cols].copy()
+    ],
+    axis=1
+)
+
+df_council_info.to_csv(output_file2, index=False)
+print(f"Council info table saved to: {output_file2}")
+print(f"Shape: {df_council_info.shape}")

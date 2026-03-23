@@ -140,6 +140,7 @@ TASKS: Dict[str, Task] = {
         ],
         outputs=[
             "bld/wide_meta.csv",
+            "bld/meta_council_info.csv",
         ],
         task_deps=["scrape_cod_procedures", "meta_table"],
         description="Build wide meta table",
@@ -308,6 +309,49 @@ TASKS: Dict[str, Task] = {
         ],
         task_deps=["scrape_cod_procedures", "timeline_table", "com_vote_info", "committee_dictionary"],
         description="Parse procedural sections from other-format texts",
+    ),
+
+    "scrape_council_votes_meta": Task(
+        name="scrape_council_votes_meta",
+        cmd=[sys.executable, "scripts/scrape_council_votes_meta.py"],
+        file_deps=[
+            "scripts/scrape_council_votes_meta.py",
+            "functions/scrape_council_votes_meta.py",
+        ],
+        outputs=[
+            "bld/council_votes.csv",
+            "bld/council_votes_meta.csv",
+            "bld/council_votes.json",
+            "bld/council_votes_meta.json",
+        ],
+        description="Scrape council votes and metadata",
+    ),
+
+    "scrape_council_lop_eulex_link": Task(
+        name="scrape_council_lop_eulex_link",
+        cmd=[sys.executable, "scripts/create_council_lop_eulex_link.py"],
+        file_deps=[
+            "scripts/create_council_lop_eulex_link.py",
+        ],
+        outputs=[
+            "bld/timeline_table_eulex_link_check.csv",
+        ],
+        description="Scrape council lop eulex link and check accessibility",
+    ),
+
+    "scrape_council_lop_pres_con": Task(
+        name="scrape_council_lop_pres_con",
+        cmd=[sys.executable, "scripts/create_council_lop_pres_con.py"],
+        file_deps=[
+            "scripts/create_council_lop_pres_con.py",
+            "functions/create_council_lop_pres_con.py",
+            "bld/pres_con_links.csv",
+        ],
+        outputs=[
+            "bld/council_lop_pres_con.csv",
+            "bld/council_lop_pres_con.json",
+        ],
+        description="Extract council participants from PRES/CONSILIUM PDFs and save CSV/JSON",
     ),
 }
 # -----------------------------------------------------------------------------
