@@ -267,6 +267,61 @@ def find_div_groups_after_header(
 
     return groups
 
+def previous_heading_text(node: Tag) -> str:
+    """
+    Return the nearest previous h1-h6 heading text for a node.
+    This helps distinguish main report sections from opinion sections.
+    """
+    heading = node.find_previous(lambda t: isinstance(t, Tag) and t.name in HEADING_TAGS)
+    if not heading:
+        return ""
+    return normalize_text(heading.get_text(" ", strip=True))
+
+
+def is_under_opinion_heading(node: Tag) -> bool:
+    """
+    True if this table belongs to an OPINION section.
+    Example:
+        <h2>OPINION of the Committee on Legal Affairs</h2>
+            ...
+            <p>PROCEDURE</p>
+            <div class="table-responsive">...</div>
+    """
+    heading = previous_heading_text(node)
+    return norm_key(heading).startswith("opinion")
+
+
+def is_main_procedure_heading(node: Tag) -> bool:
+    """
+    True if this table belongs to the final/main PROCEDURE section.
+    Example:
+        <h2 id="_section3"><span>PROCEDURE</span></h2>
+            <div>
+                <div class="table-responsive">...</div>
+            </div>
+    """
+    heading = previous_heading_text(node)
+    return norm_key(heading) == "procedure"
+
+
+def sort_responsible_procedure_candidates(divs: List[Tag]) -> List[Tag]:
+    """
+    Rank fallback PROCEDURE tables.
+
+    Priority:
+    1. Main report PROCEDURE section
+    2. Any non-opinion procedure section
+    3. Opinion procedure sections, only as last fallback
+    """
+    def priority(div: Tag) -> Tuple[int, int]:
+        if is_main_procedure_heading(div):
+            return (0, 0)
+        if not is_under_opinion_heading(div):
+            return (1, 0)
+        return (2, 0)
+
+    return sorted(divs, key=priority)
+
 # ---------------------------------------------------------------------
 # table parsing
 # ---------------------------------------------------------------------
@@ -387,14 +442,26 @@ def get_committee_votes_with_html(url: str, procedure_number: str) -> pd.DataFra
             "rollcall_string": "",
         }])
 
+    # # ---------------------------------------------------------------
+    # # 2. find responsible procedure sections
+    # # ---------------------------------------------------------------
+    # resp_sections = find_sections_by_header(soup, "PROCEDURE – COMMITTEE RESPONSIBLE")
+
+    # if not resp_sections:
+    #     # fallback
+    #     resp_sections = find_sections_by_header(soup, "PROCEDURE")
+
     # ---------------------------------------------------------------
     # 2. find responsible procedure sections
     # ---------------------------------------------------------------
     resp_sections = find_sections_by_header(soup, "PROCEDURE – COMMITTEE RESPONSIBLE")
 
     if not resp_sections:
-        # fallback
+        # Keep fallback, but rank generic PROCEDURE sections correctly.
+        # This prevents an opinion PROCEDURE table from being selected as
+        # the responsible committee table when both contain "Committee responsible".
         resp_sections = find_sections_by_header(soup, "PROCEDURE")
+        resp_sections = sort_responsible_procedure_candidates(resp_sections)
 
     # choose the first section that contains lead committee info
     resp_procedure_div = None

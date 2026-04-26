@@ -1,5 +1,9 @@
 pandas
+numpy
 requests
 beautifulsoup4
 pypdf
 pdfplumber
+pymupdf
+seleniumbase
+playwright

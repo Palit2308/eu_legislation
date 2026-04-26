@@ -2,6 +2,10 @@
 bld/
 **/bld/
 */bld/
+**/bld copy v1/
+*/bld copy v1/
+**/downloaded_files/
+*/downloaded_files/
 scrapper/.pipeline_state.json
 
 # Ignore Windows desktop settings files

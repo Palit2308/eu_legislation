@@ -3,6 +3,7 @@ import re
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup, Tag
+from seleniumbase import SB
 from urllib.parse import urljoin, urlparse, parse_qs
 
 
@@ -94,6 +95,26 @@ def find_pres_link_in_container(container, base_url):
 
     return "no", pd.NA
 
+def get_html_with_seleniumbase(url, wait_time=3):
+    """
+    Open a page using SeleniumBase undetected Chrome mode and return:
+    - page HTML
+    - final browser URL
+
+    This is used for Eur-Lex pages that may show a GSC/check page when accessed
+    through plain requests.
+    """
+    print(f"[SeleniumBase] Opening URL with uc=True: {url}")
+
+    with SB(uc=True, headless=False) as sb:
+        sb.uc_open_with_reconnect(url, reconnect_time=6)
+        sb.sleep(wait_time)
+
+        html = sb.get_page_source()
+        final_url = sb.get_current_url()
+
+    return html, final_url
+
 
 def extract_council_adoption_info(url):
     result = {
@@ -105,9 +126,12 @@ def extract_council_adoption_info(url):
     print(f"[Council scan] Checking Eur-Lex URL: {url}")
 
     try:
-        resp = session_scrape.get(url, timeout=30)
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
+        # resp = session_scrape.get(url, timeout=30)
+        # resp.raise_for_status()
+        # soup = BeautifulSoup(resp.text, "html.parser")
+
+        html, final_url = get_html_with_seleniumbase(url)
+        soup = BeautifulSoup(html, "html.parser")
 
         # 1) First check literal tables
         target_table = None
@@ -120,7 +144,7 @@ def extract_council_adoption_info(url):
         if target_table is not None:
             result["council_adoption_exists"] = "yes"
             result["press_exists"], result["pres_link"] = find_pres_link_in_container(
-                target_table, resp.url
+                target_table, final_url
             )
             print(
                 "[Council scan] Match found in table -> "
@@ -175,7 +199,7 @@ def extract_council_adoption_info(url):
         candidates.append(header_tag)
 
         for candidate in candidates:
-            press_exists, pres_link = find_pres_link_in_container(candidate, resp.url)
+            press_exists, pres_link = find_pres_link_in_container(candidate, final_url)
             if press_exists == "yes":
                 result["press_exists"] = "yes"
                 result["pres_link"] = pres_link
@@ -432,7 +456,7 @@ def get_document_pdf_link(pres_link, debug=False):
 # Main execution
 # -----------------------------
 def main():
-    input_path = os.path.join(BLD, "timeline_table_checked.csv")
+    input_path = os.path.join(BLD, "timeline_table_eulex_link_check.csv")
 
     print("=" * 80)
     print("Starting create_council_lop_pres_con_links.py")
