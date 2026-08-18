@@ -70,7 +70,7 @@ procedures = [
 # List to hold individual DataFrames
 all_dfs = []
 
-for ref in procedures:
+for ref in df_landing['reference'].values.tolist(): #procedures:
     print(f"Processing {ref} ...")
     # Find the row with this reference
     match = df_landing.loc[df_landing['reference'] == ref]

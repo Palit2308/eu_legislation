@@ -65,7 +65,7 @@ all_meetings = []  # will hold rows from all procedures
 session = requests.Session()
 session.headers.update(HEADERS)
 
-for procedure_ref in PROCEDURE_REFS:
+for procedure_ref in df_landing['reference'].values.tolist():
     print(f"\n=== Processing {procedure_ref} ===")
 
     # Find URL for this procedure

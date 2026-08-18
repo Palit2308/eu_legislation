@@ -56,7 +56,7 @@ df_landing = pd.read_csv(LANDING_CSV)
 # --- Loop over procedures and build timeline ---
 all_timelines = []
 
-for ref in procedures:
+for ref in df_landing['reference'].values.tolist():
     print(f"Processing {ref} ...")
 
     # Find the URL

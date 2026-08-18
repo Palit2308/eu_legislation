@@ -248,22 +248,22 @@ TASKS: Dict[str, Task] = {
         description="Parse procedural sections from other-format texts",
     ),
 
-    # 11
-    "scrape_council_votes_meta": Task(
-        name="scrape_council_votes_meta",
-        cmd=[sys.executable, "scripts/scrape_council_votes_meta.py"],
-        file_deps=[
-            "scripts/scrape_council_votes_meta.py",
-            "functions/scrape_council_votes_meta.py",
-        ],
-        outputs=[
-            "bld/council_votes.csv",
-            "bld/council_votes_meta.csv",
-            "bld/council_votes.json",
-            "bld/council_votes_meta.json",
-        ],
-        description="Scrape council votes and metadata",
-    ),
+    # # 11
+    # "scrape_council_votes_meta": Task(
+    #     name="scrape_council_votes_meta",
+    #     cmd=[sys.executable, "scripts/scrape_council_votes_meta.py"],
+    #     file_deps=[
+    #         "scripts/scrape_council_votes_meta.py",
+    #         "functions/scrape_council_votes_meta.py",
+    #     ],
+    #     outputs=[
+    #         "bld/council_votes.csv",
+    #         "bld/council_votes_meta.csv",
+    #         "bld/council_votes.json",
+    #         "bld/council_votes_meta.json",
+    #     ],
+    #     description="Scrape council votes and metadata",
+    # ),
 
     # 12
     "scrape_council_lop_eulex_link": Task(
@@ -312,19 +312,19 @@ TASKS: Dict[str, Task] = {
         description="Extract council participants from PRES/CONSILIUM PDFs and save CSV/JSON",
     ),
 
-    # 15
-    "scrape_council_lop_meeting-docs": Task(
-        name="scrape_council_lop_meeting_docs",
-        cmd=[sys.executable, "scripts/create_council_lop_meeting_doc.py"],
-        file_deps=[
-            "scripts/create_council_lop_meeting_doc.py",
-            "functions/create_council_lop_meeting_doc.py",
-        ],
-        outputs=[
-            "bld/council_lop_out_docs.csv",
-        ],
-        description="Extract council participants from MEETING DOCS PDFs and save CSV",
-    ),
+    # # 15
+    # "scrape_council_lop_meeting-docs": Task(
+    #     name="scrape_council_lop_meeting_docs",
+    #     cmd=[sys.executable, "scripts/create_council_lop_meeting_doc.py"],
+    #     file_deps=[
+    #         "scripts/create_council_lop_meeting_doc.py",
+    #         "functions/create_council_lop_meeting_doc.py",
+    #     ],
+    #     outputs=[
+    #         "bld/council_lop_out_docs.csv",
+    #     ],
+    #     description="Extract council participants from MEETING DOCS PDFs and save CSV",
+    # ),
 
     # 16
     "scrape_voted_amendments_in_plenary": Task(
@@ -379,382 +379,6 @@ TASKS: Dict[str, Task] = {
         description="Scrape final vote results in the European Parliament and save extracted vote tables",
     ),
 }
-
-# TASKS: Dict[str, Task] = {
-#     # Example assumptions:
-#     # - raw input data lives in bld/
-#     # - scripts live in scripts/
-#     # - reusable functions live in functions/
-#     #
-#     # Adjust file names if yours differ.
-
-#     # 01
-#     "committee_dictionary": Task(
-#         name="committee_dictionary",
-#         cmd=[sys.executable, "scripts/create_committee_dictionary.py"],
-#         file_deps=[
-#             "scripts/create_committee_dictionary.py",
-#             "functions/create_committee_dictionary.py",
-#         ],
-#         outputs=[
-#             "bld/committee_dictionary.csv",
-#             "bld/committee_dictionary.json",
-#         ],
-#         description="Build committee dictionary",
-#     ),
-
-#     # 02
-#     "scrape_cod_procedures": Task(
-#         name="scrape_cod_procedures",
-#         cmd=[sys.executable, "scripts/scrape_cod_procedures.py"],
-#         file_deps=[
-#             "scripts/scrape_cod_procedures.py",
-#             "functions/scrape_cod_procedures.py",
-#         ],
-#         outputs=[
-#             "bld/oeil_cod_procedures.csv",
-#         ],
-#         description="Scrape COD procedures",
-#     ),
-
-#     # 03
-#     "meta_table": Task(
-#         name="meta_table",
-#         cmd=[sys.executable, "scripts/create_meta_table.py"],
-#         file_deps=[
-#             "scripts/create_meta_table.py",
-#             "scripts/scrape_cod_procedures.py",
-#             "functions/scrape_cod_procedures.py",
-#             "functions/create_meta_table.py",
-#             "bld/oeil_cod_procedures.csv",
-#         ],
-#         outputs=[
-#             "bld/meta_table.csv",
-#             "bld/meta_table.json",
-#         ],
-#         task_deps=["scrape_cod_procedures"],
-#         description="Build meta table",
-#     ),
-
-#     # 04
-#     "wide_meta": Task(
-#         name="wide_meta",
-#         cmd=[sys.executable, "scripts/create_wide_meta.py"],
-#         file_deps=[
-#             "scripts/create_wide_meta.py",
-#             "scripts/create_meta_table.py",
-#             "scripts/scrape_cod_procedures.py",
-#             "functions/scrape_cod_procedures.py",
-#             "functions/create_meta_table.py",
-#             "bld/oeil_cod_procedures.csv",
-#             "bld/meta_table.csv",
-#             "bld/meta_table.json",
-#         ],
-#         outputs=[
-#             "bld/wide_meta.csv",
-#             "bld/meta_council_info.csv",
-#         ],
-#         task_deps=["scrape_cod_procedures", "meta_table"],
-#         description="Build wide meta table",
-#     ),
-
-#     # 05
-#     "timeline_table": Task(
-#         name="timeline_table",
-#         cmd=[sys.executable, "scripts/create_timeline_table.py"],
-#         file_deps=[
-#             "scripts/create_timeline_table.py",
-#             "scripts/scrape_cod_procedures.py",
-#             "functions/scrape_cod_procedures.py",
-#             "functions/create_timeline_table.py",
-#             "bld/oeil_cod_procedures.csv",
-#         ],
-#         outputs=[
-#             "bld/timeline_table.csv",
-#             "bld/timeline_table.json",
-#         ],
-#         task_deps=["scrape_cod_procedures"],
-#         description="Build timeline table",
-#     ),
-
-#     # 06
-#     "transparency_table": Task(
-#         name="transparency_table",
-#         cmd=[sys.executable, "scripts/create_transparency_table.py"],
-#         file_deps=[
-#             "scripts/create_transparency_table.py",
-#             "scripts/scrape_cod_procedures.py",
-#             "functions/scrape_cod_procedures.py",
-#             "functions/create_transparency_table.py",
-#             "bld/oeil_cod_procedures.csv",
-#         ],
-#         outputs=[
-#             "bld/transparency_table.csv",
-#             "bld/transparency_table.json",
-#         ],
-#         task_deps=["scrape_cod_procedures"],
-#         description="Build transparency table",
-#     ),
-
-#     # 07
-#     "com_vote_info": Task(
-#         name="com_vote_info",
-#         cmd=[sys.executable, "scripts/create_com_vote_info.py"],
-#         file_deps=[
-#             "scripts/create_com_vote_info.py",
-#             "scripts/create_timeline_table.py",
-#             "scripts/scrape_cod_procedures.py",
-#             "functions/scrape_cod_procedures.py",
-#             "functions/create_timeline_table.py",
-#             "functions/create_com_vote_info.py",
-#             "bld/oeil_cod_procedures.csv",
-#             "bld/timeline_table.csv",
-#             "bld/timeline_table.json",
-#         ],
-#         outputs=[
-#             "bld/committee_vote_info.csv",
-#             "bld/committee_vote_info.json",
-#         ],
-#         task_deps=["scrape_cod_procedures", "timeline_table"],
-#         description="Build committee vote info",
-#     ),
-
-#     # 08
-#     "com_vote_procedure": Task(
-#         name="com_vote_procedure",
-#         cmd=[sys.executable, "scripts/create_com_vote_procedure.py"],
-#         file_deps=[
-#             "scripts/create_com_vote_procedure.py",
-#             "scripts/create_com_vote_info.py",
-#             "scripts/create_timeline_table.py",
-#             "scripts/scrape_cod_procedures.py",
-#             "functions/scrape_cod_procedures.py",
-#             "functions/create_com_vote_procedure.py",
-#             "functions/create_timeline_table.py",
-#             "functions/create_com_vote_info.py",
-#             "bld/oeil_cod_procedures.csv",
-#             "bld/timeline_table.csv",
-#             "bld/timeline_table.json",
-#             "bld/committee_vote_info.csv",
-#             "bld/committee_vote_info.json",
-#         ],
-#         outputs=[
-#             "bld/committee_vote_procedure_table.csv",
-#             "bld/committee_vote_procedure_table.json",
-#         ],
-#         task_deps=["scrape_cod_procedures", "timeline_table", "com_vote_info"],
-#         description="Parse committee procedure tables",
-#     ),
-
-#     # 09
-#     "com_roll_call": Task(
-#         name="com_roll_call",
-#         cmd=[sys.executable, "scripts/create_com_roll_call.py"],
-#         file_deps=[
-#             "scripts/create_com_roll_call.py",
-#             "scripts/create_com_vote_info.py",
-#             "scripts/create_timeline_table.py",
-#             "scripts/scrape_cod_procedures.py",
-#             "functions/scrape_cod_procedures.py",
-#             "functions/create_com_roll_call.py",
-#             "functions/create_timeline_table.py",
-#             "functions/create_com_vote_info.py",
-#             "bld/oeil_cod_procedures.csv",
-#             "bld/timeline_table.csv",
-#             "bld/timeline_table.json",
-#             "bld/committee_vote_info.csv",
-#             "bld/committee_vote_info.json",
-#         ],
-#         outputs=[
-#             "bld/committee_roll_call_table.csv",
-#             "bld/committee_roll_call_table.json",
-#         ],
-#         task_deps=["scrape_cod_procedures", "timeline_table", "com_vote_info"],
-#         description="Expand committee roll call tables",
-#     ),
-
-#     # "com_other_format_text": Task(
-#     #     name="com_other_format_text",
-#     #     cmd=[sys.executable, "scripts/create_com_other_format_text.py"],
-#     #     file_deps=[
-#     #         "scripts/create_com_other_format_text.py",
-#     #         "scripts/create_com_vote_info.py",
-#     #         "scripts/create_timeline_table.py",
-#     #         "scripts/scrape_cod_procedures.py",
-#     #         "functions/scrape_cod_procedures.py",
-#     #         "functions/create_other_format_text.py",
-#     #         "functions/create_timeline_table.py",
-#     #         "functions/create_com_vote_info.py",
-#     #         "bld/oeil_cod_procedures.csv",
-#     #         "bld/timeline_table.csv",
-#     #         "bld/timeline_table.json",
-#     #         "bld/committee_vote_info.csv",
-#     #         "bld/committee_vote_info.json",
-#     #     ],
-#     #     outputs=[
-#     #         "bld/committee_other_format_text.csv",
-#     #     ],
-#     #     task_deps=["scrape_cod_procedures", "timeline_table", "com_vote_info"],
-#     #     description="Extract text from fallback PDFs / other formats",
-#     # ),
-
-#     # 10
-#     "other_format_com_vote_procedure": Task(
-#         name="other_format_com_vote_procedure",
-#         cmd=[sys.executable, "scripts/create_other_format_com_vote_procedure.py"],
-#         file_deps=[
-#             "scripts/create_other_format_com_vote_procedure.py",
-#             "scripts/create_com_vote_info.py",
-#             "scripts/create_timeline_table.py",
-#             "scripts/scrape_cod_procedures.py",
-#             'scripts/create_committee_dictionary.py',
-#             'functions/create_committee_dictionary.py',
-#             "functions/scrape_cod_procedures.py",
-#             "functions/create_other_format_com_vote_procedure.py",
-#             "functions/create_timeline_table.py",
-#             "functions/create_com_vote_info.py",
-#             "bld/oeil_cod_procedures.csv",
-#             "bld/timeline_table.csv",
-#             "bld/timeline_table.json",
-#             "bld/committee_vote_info.csv",
-#             "bld/committee_vote_info.json",
-#             "bld/committee_dictionary.csv",
-#             "bld/committee_dictionary.json",
-#         ],
-#         outputs=[
-#             "bld/committee_other_format_procedure_table.csv",
-#             "bld/committee_other_format_procedure_table.json",
-#         ],
-#         task_deps=["scrape_cod_procedures", "timeline_table", "com_vote_info", "committee_dictionary"],
-#         description="Parse procedural sections from other-format texts",
-#     ),
-
-#     # 11
-#     "scrape_council_votes_meta": Task(
-#         name="scrape_council_votes_meta",
-#         cmd=[sys.executable, "scripts/scrape_council_votes_meta.py"],
-#         file_deps=[
-#             "scripts/scrape_council_votes_meta.py",
-#             "functions/scrape_council_votes_meta.py",
-#         ],
-#         outputs=[
-#             "bld/council_votes.csv",
-#             "bld/council_votes_meta.csv",
-#             "bld/council_votes.json",
-#             "bld/council_votes_meta.json",
-#         ],
-#         description="Scrape council votes and metadata",
-#     ),
-
-#     # 12
-#     "scrape_council_lop_eulex_link": Task(
-#         name="scrape_council_lop_eulex_link",
-#         cmd=[sys.executable, "scripts/create_council_lop_eulex_link.py"],
-#         file_deps=[
-#             "scripts/create_council_lop_eulex_link.py",
-#         ],
-#         outputs=[
-#             "bld/timeline_table_eulex_link_check.csv",
-#         ],
-#         description="Scrape council lop eulex link and check accessibility",
-#     ),
-
-#     # 13
-#     "scrape_council_lop_pres_con_links": Task(
-#         name="scrape_council_lop_pres_con_links",
-#         cmd=[sys.executable, "scripts/create_council_lop_pres_con_links.py"],
-#         file_deps=[
-#             "scripts/create_council_lop_pres_con_links.py",
-#             "bld/timeline_table_eulex_link_check.csv",
-#         ],
-#         outputs=[
-#             "bld/pres_con_links.csv",
-#         ],
-#         description="Extract council pres con links and check accessibility and pdf links",
-#     ),
-
-#     # 14
-#     "scrape_council_lop_pres_con": Task(
-#         name="scrape_council_lop_pres_con",
-#         cmd=[sys.executable, "scripts/create_council_lop_pres_con.py"],
-#         file_deps=[
-#             "scripts/create_council_lop_pres_con.py",
-#             "functions/create_council_lop_pres_con.py",
-#             "bld/pres_con_links.csv",
-#         ],
-#         outputs=[
-#             "bld/council_lop_pres_con.csv",
-#             "bld/council_lop_pres_con.json",
-#         ],
-#         description="Extract council participants from PRES/CONSILIUM PDFs and save CSV/JSON",
-#     ),
-
-#     # 15
-#     "scrape_council_lop_meeting-docs": Task(
-#         name="scrape_council_lop_meeting_docs",
-#         cmd=[sys.executable, "scripts/create_council_lop_meeting_doc.py"],
-#         file_deps=[
-#             "scripts/create_council_lop_meeting_doc.py",
-#         ],
-#         outputs=[
-#             "bld/council_lop_out_docs.csv",
-#         ],
-#         description="Extract council participants from MEETING DOCS PDFs and save CSV/JSON",
-#     ),
-
-#     # 16
-#     "scrape_voted_amendments_in_plenary": Task(
-#         name="scrape_voted_amendments_in_plenary",
-#         cmd=[sys.executable, "scripts/create_voted_amendments.py"],
-#         file_deps=[
-#             "scripts/create_voted_amendments.py",
-#             "functions/create_voted_amendments.py",
-#             "bld/timeline_table.csv",
-#         ],
-#         outputs=[
-#             "bld/voted_amendments_all.csv",
-#             "bld/failed_voted_amendments.csv",
-#         ],
-#         description="Scrape voted amendments in plenary from amendment PDFs and save extracted amendments CSV",
-#     ),
-
-#     # 17
-#     "scrape_all_amendments": Task(
-#         name="scrape_all_amendments",
-#         cmd=[sys.executable, "scripts/create_all_amendments.py"],
-#         file_deps=[
-#             "scripts/create_all_amendments.py",
-#             "functions/create_all_amendments.py",
-#             "bld/timeline_table.csv",
-#         ],
-#         outputs=[
-#             "bld/proposed_amendments_all.csv",
-#             "bld/all_amendments_document_links.csv",
-#             "bld/failed_all_amendments_pdf_text.csv",
-#             "bld/failed_all_amendments_parsing.csv",
-#         ],
-#         description="Scrape all proposed amendments from committee draft reports and committee amendment PDFs",
-#     ),
-
-#     # 18
-#     "scrape_ep_final_vote_results": Task(
-#         name="scrape_ep_final_vote_results",
-#         cmd=[sys.executable, "scripts/create_ep_final_vote_results.py"],
-#         file_deps=[
-#             "scripts/create_ep_final_vote_results.py",
-#             "functions/create_ep_final_vote_results.py",
-#             "bld/timeline_table.csv",
-#         ],
-#         outputs=[
-#             "bld/final_vote_ep_extracted.csv",
-#             "bld/failed_ep_vote_extractions.csv",
-#         ],
-#         description="Scrape final vote results in the European Parliament and save extracted vote tables",
-#     ),
-# }
-# -----------------------------------------------------------------------------
-# end editable section
-# -----------------------------------------------------------------------------
 
 
 # =============================================================================
